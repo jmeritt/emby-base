@@ -9,6 +9,8 @@ spec:
   selector:
     matchLabels:
       app: emby
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -26,11 +28,23 @@ spec:
       - name: emby
         image: emby/embyserver
         imagePullPolicy: Always
+        env:
+        - name: UID
+          value: "2580"
+        - name: GID
+          value: "2580"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "500Mi"
+          limits:
+            cpu: "250m"
+            memory: "1024Mi"
         ports:
         - containerPort: 8096
         volumeMounts:
         - name: programdata
-          mountPath: /programdata
+          mountPath: /config
         - name: tv
           mountPath: /tv
         - name: movies
